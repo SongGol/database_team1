@@ -1,3 +1,5 @@
+package database;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -5,294 +7,297 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.awt.*;
 import java.util.*;
+
+//윈도우 창을 띄워주는데 쓰는 클래스 JFrame
+//Text입력은 JTextField사용
+//버튼클릭 이벤트는 JButton사용
+//JButton에는 addActionListener를 달아서 버튼이 눌렸을 때 행동을 정의한다.
+//JButton("버튼글자" or new ImageIcon("location")) 버튼에 글자를 넣거나 이미지 버튼을 만들 수 있다.
+//선언한 버튼들은 add(버튼);으로 등록
+//JPanel은 작은 창이라고 생각하면 될 듯. 똑같이 add()로 등록해주고 jpanel.add(button)으로 패널에 버튼 추가 가능
+//JCheckbox 체크박스
+//Jtextfield 사용자에게서 값을 입력받을 수 있는 EditText같은 것.
+//JcomboBox 누르면 여러 목록들이 튀어나오는 것. spinner같은 것.
+//JTable 검색결과 표를 만드는데 사용
+/*
 public class Gui extends JFrame {
-	String [] tables;
-	String val;
-	String name;
-	int va=0;
-	ArrayList<String> s;
-	String insert;
-	ArrayList<String> ta;
-	String [] login;
-	public Gui(ArrayList<String> s,ArrayList<String> ta,String name,String[] tables,String[] login) {
-		LinkedHashSet<String> p = new LinkedHashSet();
-		ArrayList<String> inx = new ArrayList();
-		ArrayList<String> inx2 = new ArrayList();
-		ArrayList<String> ssn = new ArrayList();
-	
-		String[] dname = {"부서별","Research","Administration","Headquarters"};
-		this.name = name;
-		this.s=s;
-		this.ta=ta;
-		this.login=login;
-		int size=0;
-		String[] header =new String[s.size()];
-		
-		for(String temp: s) {
-			header[size++]=temp;
-		}
-		String [][] cc = new String[ta.size()][s.size()];
-		for(int i=0; i<ta.size();i++) {
-			String array[] = ta.get(i).split("&");
-			for(int j=0;j<s.size();j++) {
-				cc[i][j]=array[j];
-			}
-		}
-		
-		JButton[] button = new JButton[s.size()];
-		JPanel checkPanel = new JPanel();
-		JPanel atrPanel = new JPanel();
-		JCheckBox[] atr = new JCheckBox[s.size()];
-		JCheckBox[] check = new JCheckBox[ta.size()];
-		JTextField text = new JTextField();
-		JButton updateButton = new JButton("선택수정");
-		JButton insertButton = new JButton("삽입");
-		JButton deleteTypedButton = new JButton("입력삭제");
-		JButton deleteSelectedButton = new JButton("선택삭제");
-		
-		Container d= getContentPane();
-		setTitle("database");
-		d.revalidate();
-		JPanel c = new JPanel();
-		// c.setLayout(new FlowLayout());
-			
-		
-		JComboBox combo = new JComboBox(tables);
-		c.add(combo, BorderLayout.NORTH);
-		JComboBox combo2 = new JComboBox(dname);
-		c.add(combo2, BorderLayout.NORTH);
-		Font font = new Font("돋움",4,25);
-		Font font2 = new Font("돋움",4,20);
-		text.setFont(font);
-		JTable table = new JTable(cc,header);
-		table.setRowHeight(40);
-		JScrollPane scrollpane = new JScrollPane(table);
-		table.setPreferredSize(new Dimension(700,500));
-		scrollpane.setPreferredSize(new Dimension(960,500));
-		c.add(updateButton);
-		updateButton.setPreferredSize(new Dimension(100,40));
-		c.add(insertButton);
-		insertButton.setPreferredSize(new Dimension(100,40));
-		deleteSelectedButton.setPreferredSize(new Dimension(100,40));
-		c.add(deleteTypedButton);
-		c.add(deleteSelectedButton);
-		c.add(text);
-		text.setPreferredSize(new Dimension(900,40));
-		deleteTypedButton.setPreferredSize(new Dimension(100,40));
-		ActionListener listener = new ActionListener()
-		  {
-		     @Override
-		     public void actionPerformed(ActionEvent e)
-		     {	
-		    	 
-		    	 p.add(e.getActionCommand());
-		     }   
-		  };
+    String[] tables;
+    String val;
+    String name;
+    int va = 0;
+    ArrayList<String> s;
+    String insert;
+    ArrayList<String> ta;
+    String[] login;
 
-		  for(int m=0;m<ta.size();m++) {
-				check[m] = new JCheckBox("tuple"+(m+1)+"");
-				check[m].setPreferredSize(new Dimension(90,50));
-				checkPanel.add(check[m], BorderLayout.CENTER);
-		}
-		c.add(checkPanel);
-			
-		
-		for(int j=0 ; j<s.size();j++) {
-			atr[j] = new JCheckBox();
-			atr[j].setText(s.get(j));
-			atr[j].setFont(font2);
-			atr[j].setSelected(true);
-			atr[j].setPreferredSize(new Dimension(100,100));
-			atr[j].addItemListener(new ItemListener() {
-				public void itemStateChanged(ItemEvent e){
-					int j=0;
-					for(int i=0;i<s.size();i++) {				
-						if(atr[i].isSelected()) {
-						j++;
-						}					
-					
-					}
-					for(int i=0;i<s.size();i++) {
-						
-						if(atr[i].isSelected()) {
-							System.out.println(i);
-							table.getColumn(atr[i].getText()).setWidth(960/j);
-							table.getColumn(atr[i].getText()).setMinWidth(960/j);
-							table.getColumn(atr[i].getText()).setMaxWidth(960/j);
-							
-							
-						}
-						else if(!atr[i].isSelected()) {
-							table.getColumn(atr[i].getText()).setWidth(0);
-							table.getColumn(atr[i].getText()).setMinWidth(0);
-							table.getColumn(atr[i].getText()).setMaxWidth(0);
-							
-						}
-						
-					}
-					c.repaint();
-					d.add(c);				
-			}
-			});
+    public Gui(ArrayList<String> s, ArrayList<String> ta, String name, String[] tables, String[] login) {
+        LinkedHashSet<String> p = new LinkedHashSet();
+        ArrayList<String> inx = new ArrayList();
+        ArrayList<String> inx2 = new ArrayList();
+        ArrayList<String> ssn = new ArrayList();
 
-			atrPanel.add(atr[j],  BorderLayout.SOUTH);
-		}
-		c.add(atrPanel);
-		c.add(scrollpane,  BorderLayout.SOUTH);
+        String[] dname = {"부서별", "Research", "Administration", "Headquarters"};
+        this.name = name;
+        this.s = s;
+        this.ta = ta;
+        this.login = login;
+        int size = 0;
+        String[] header = new String[s.size()];
 
-		d.add(c);
+        for (String temp : s) {
+            header[size++] = temp;
+        }
+        String[][] cc = new String[ta.size()][s.size()];
+        for (int i = 0; i < ta.size(); i++) {
+            String array[] = ta.get(i).split("&");
+            for (int j = 0; j < s.size(); j++) {
+                cc[i][j] = array[j];
+            }
+        }
 
-		insertButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-						insert=text.getText();
-						Dbinsert dbi = new Dbinsert(insert,name,login);
-						Db2 db=new Db2(name,login);
-						dispose();
-				} catch (SQLException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		deleteTypedButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-						insert=text.getText();
-						Dbdelete dbi = new Dbdelete(insert,name,login);
-						Db2 db=new Db2(name,login);
-						dispose();
-				} catch (SQLException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		deleteSelectedButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-						for(int i=0; i<ta.size();i++) {
-							String array[] = ta.get(i).split("&");
-							if(check[i].isSelected()) {
-								ssn.add(array[1]);
-							}
-						}
-						Dbcheckd dbs = new Dbcheckd(ssn,name,login);
-						c.repaint();
-						d.add(c);
-						Db2 db=new Db2(name,login);
-						dispose();
-				} catch (SQLException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		updateButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {	
-					for(int i=0; i<ta.size();i++) {
-							String array[] = ta.get(i).split("&");
-							if(check[i].isSelected()) {
-								ssn.add(array[1]);
-							}
-						}
-						insert = text.getText();
-						Dbupdate dbu = new Dbupdate(ssn,insert,name,login);
+        JButton[] button = new JButton[s.size()];
+        JPanel checkPanel = new JPanel();
+        JPanel atrPanel = new JPanel();
+        JCheckBox[] atr = new JCheckBox[s.size()];
+        JCheckBox[] check = new JCheckBox[ta.size()];
+        JTextField text = new JTextField();
+        JButton updateButton = new JButton("선택수정");
+        JButton insertButton = new JButton("삽입");
+        JButton deleteTypedButton = new JButton("입력삭제");
+        JButton deleteSelectedButton = new JButton("선택삭제");
 
-						Db2 db=new Db2(name,login);
-						dispose();
-						
-				} catch (SQLException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
+        Container d = getContentPane();
+        setTitle("database");
+        d.revalidate();
+        JPanel c = new JPanel();
+        // c.setLayout(new FlowLayout());
 
-		
-		
-	
-		combo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JComboBox cb = (JComboBox)e.getSource(); 
-				int index = cb.getSelectedIndex(); 
-				try {			
-					
-					Db2 db = new Db2(tables[index],login);
 
-					dispose();
-				} catch (SQLException | IOException e1) {
-					
-					e1.printStackTrace();
-				}
-				
-			}
-		});
-		combo2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(name =="employee") {
-				JComboBox cb = (JComboBox)e.getSource(); 
-				int index = cb.getSelectedIndex();
-				if(index==0) {
-					try {
-						Db2 db2= new Db2("employee",login);
-					} catch (SQLException | IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-				}
-				else if(index==1) {
-					try {
-						Dbdata db1 =new Dbdata(name,dname[index],login);
-					} catch (SQLException | IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-				}
-				else if(index==2) {
-					try {
-						Dbdata db1 =new Dbdata(name,dname[index],login);
-					} catch (SQLException | IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					
-				}
-				else if(index==3) {
-					try {
-						Dbdata db1 =new Dbdata(name,dname[index],login);
-					} catch (SQLException | IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					
-				}
+        JComboBox combo = new JComboBox(tables);
+        c.add(combo, BorderLayout.NORTH);
+        JComboBox combo2 = new JComboBox(dname);
+        c.add(combo2, BorderLayout.NORTH);
+        Font font = new Font("돋움", 4, 25);
+        Font font2 = new Font("돋움", 4, 20);
+        text.setFont(font);
+        JTable table = new JTable(cc, header);
+        table.setRowHeight(40);
+        JScrollPane scrollpane = new JScrollPane(table);
+        table.setPreferredSize(new Dimension(700, 500));
+        scrollpane.setPreferredSize(new Dimension(960, 500));
+        c.add(updateButton);
+        updateButton.setPreferredSize(new Dimension(100, 40));
+        c.add(insertButton);
+        insertButton.setPreferredSize(new Dimension(100, 40));
+        deleteSelectedButton.setPreferredSize(new Dimension(100, 40));
+        c.add(deleteTypedButton);
+        c.add(deleteSelectedButton);
+        c.add(text);
+        text.setPreferredSize(new Dimension(900, 40));
+        deleteTypedButton.setPreferredSize(new Dimension(100, 40));
+        ActionListener listener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-				dispose();
-			}
-			}
-		});
-		
-		
-		
-		
-		
-		
-		// 콤보박스에 Action 리스너 등록. 선택된 아이템의 이미지 출력
-		
-		setSize(1000,800);
-		setVisible(true);
-	}
-	
-	
+                p.add(e.getActionCommand());
+            }
+        };
 
-	public static void main(String [] args) {
-		
-		
-	}
-}
+        for (int m = 0; m < ta.size(); m++) {
+            check[m] = new JCheckBox("tuple" + (m + 1) + "");
+            check[m].setPreferredSize(new Dimension(90, 50));
+            checkPanel.add(check[m], BorderLayout.CENTER);
+        }
+        c.add(checkPanel);
+
+
+        for (int j = 0; j < s.size(); j++) {
+            atr[j] = new JCheckBox();
+            atr[j].setText(s.get(j));
+            atr[j].setFont(font2);
+            atr[j].setSelected(true);
+            atr[j].setPreferredSize(new Dimension(100, 100));
+            atr[j].addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    int j = 0;
+                    for (int i = 0; i < s.size(); i++) {
+                        if (atr[i].isSelected()) {
+                            j++;
+                        }
+
+                    }
+                    for (int i = 0; i < s.size(); i++) {
+
+                        if (atr[i].isSelected()) {
+                            System.out.println(i);
+                            table.getColumn(atr[i].getText()).setWidth(960 / j);
+                            table.getColumn(atr[i].getText()).setMinWidth(960 / j);
+                            table.getColumn(atr[i].getText()).setMaxWidth(960 / j);
+
+
+                        } else if (!atr[i].isSelected()) {
+                            table.getColumn(atr[i].getText()).setWidth(0);
+                            table.getColumn(atr[i].getText()).setMinWidth(0);
+                            table.getColumn(atr[i].getText()).setMaxWidth(0);
+
+                        }
+
+                    }
+                    c.repaint();
+                    d.add(c);
+                }
+            });
+
+            atrPanel.add(atr[j], BorderLayout.SOUTH);
+        }
+        c.add(atrPanel);
+        c.add(scrollpane, BorderLayout.SOUTH);
+
+        d.add(c);
+
+        insertButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    insert = text.getText();
+                    Dbinsert dbi = new Dbinsert(insert, name, login);
+                    Db2 db = new Db2(name, login);
+                    dispose();
+                } catch (SQLException | IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+        deleteTypedButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    insert = text.getText();
+                    Dbdelete dbi = new Dbdelete(insert, name, login);
+                    Db2 db = new Db2(name, login);
+                    dispose();
+                } catch (SQLException | IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+        deleteSelectedButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    for (int i = 0; i < ta.size(); i++) {
+                        String array[] = ta.get(i).split("&");
+                        if (check[i].isSelected()) {
+                            ssn.add(array[1]);
+                        }
+                    }
+                    Dbcheckd dbs = new Dbcheckd(ssn, name, login);
+                    c.repaint();
+                    d.add(c);
+                    Db2 db = new Db2(name, login);
+                    dispose();
+                } catch (SQLException | IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+        updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    for (int i = 0; i < ta.size(); i++) {
+                        String array[] = ta.get(i).split("&");
+                        if (check[i].isSelected()) {
+                            ssn.add(array[1]);
+                        }
+                    }
+                    insert = text.getText();
+                    Dbupdate dbu = new Dbupdate(ssn, insert, name, login);
+
+                    Db2 db = new Db2(name, login);
+                    dispose();
+
+                } catch (SQLException | IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+
+        combo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox) e.getSource();
+                int index = cb.getSelectedIndex();
+                try {
+
+                    Db2 db = new Db2(tables[index], login);
+
+                    dispose();
+                } catch (SQLException | IOException e1) {
+
+                    e1.printStackTrace();
+                }
+
+            }
+        });
+        combo2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (name == "employee") {
+                    JComboBox cb = (JComboBox) e.getSource();
+                    int index = cb.getSelectedIndex();
+                    if (index == 0) {
+                        try {
+                            Db2 db2 = new Db2("employee", login);
+                        } catch (SQLException | IOException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+
+                    } else if (index == 1) {
+                        try {
+                            Dbdata db1 = new Dbdata(name, dname[index], login);
+                        } catch (SQLException | IOException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+
+                    } else if (index == 2) {
+                        try {
+                            Dbdata db1 = new Dbdata(name, dname[index], login);
+                        } catch (SQLException | IOException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+
+
+                    } else if (index == 3) {
+                        try {
+                            Dbdata db1 = new Dbdata(name, dname[index], login);
+                        } catch (SQLException | IOException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+
+
+                    }
+
+                    dispose();
+                }
+            }
+        });
+
+
+        // 콤보박스에 Action 리스너 등록. 선택된 아이템의 이미지 출력
+
+        //전체 창 사이즈
+        setSize(1000, 800);
+        //창을 눈에 보이게 설정
+        setVisible(true);
+    }
+
+
+    public static void main(String[] args) {
+
+
+    }
+}*/
