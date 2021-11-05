@@ -19,7 +19,7 @@ import java.util.*;
 //Jtextfield 사용자에게서 값을 입력받을 수 있는 EditText같은 것.
 //JcomboBox 누르면 여러 목록들이 튀어나오는 것. spinner같은 것.
 //JTable 검색결과 표를 만드는데 사용
-/*
+
 public class Gui extends JFrame {
     String[] tables;
     String val;
@@ -154,7 +154,7 @@ public class Gui extends JFrame {
         c.add(scrollpane, BorderLayout.SOUTH);
 
         d.add(c);
-
+/*
         insertButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -284,7 +284,7 @@ public class Gui extends JFrame {
                     dispose();
                 }
             }
-        });
+        });*/
 
 
         // 콤보박스에 Action 리스너 등록. 선택된 아이템의 이미지 출력
@@ -300,4 +300,4 @@ public class Gui extends JFrame {
 
 
     }
-}*/
+}
