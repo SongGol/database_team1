@@ -41,6 +41,13 @@ public class MyGui extends JFrame{
     String[] UPDATE_OPTIONS = {"Address", "Sex", "Salary"};
     //Sex String
     String[] SEXS = {"F", "M"};
+    //insert strings
+    String[] INSERTION_OPTIONS = {"First Name", "Middle Init", "Last Name", "Ssn", "Birthdate", "Address", "Sex", "Salary", "Super_ssn", "Dno"};
+    //부서 정보
+    String[] DEPARTMENT = {"Research", "Headquarter", "Administration"};
+    //생일 정보
+    String[] BIRTHDATE = {"1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"};
+
 
     //테스트용 더미 데이터
     Object[][] data = {{false, "F T W", "333445555", "1955-12-08", "638 V, H", "M", "40000", "J E B", "Research"},
@@ -88,7 +95,7 @@ public class MyGui extends JFrame{
         searchOptionPanel.add(searchWrapper);
 
         //checkPanel에 checkbox넣기
-        JCheckBox[] checkBoxes = new JCheckBox[CHECK_OPTIONS.length];
+        JCheckBox[] checkBoxes = new JCheckBox[CHECK_OPTIONS.length - 1];
         for(int i = 1; i < CHECK_OPTIONS.length; ++i) {
             checkBoxes[i - 1] = new JCheckBox(CHECK_OPTIONS[i], true);
             checkBoxes[i - 1].setPreferredSize(new Dimension(100, 30));
@@ -104,7 +111,8 @@ public class MyGui extends JFrame{
         //table.setRowHeight(40);
         //table.setPreferredSize(new Dimension(700, 500));
         //JScrollPane scrollpane = new JScrollPane(table);
-        JScrollPane scrollpane = makeTable(data, CHECK_OPTIONS);
+        JTable resultTable = makeTable(data, CHECK_OPTIONS);
+        JScrollPane scrollpane = new JScrollPane(resultTable);
 
 
         //updatePanel에 comboBox넣기
@@ -130,107 +138,27 @@ public class MyGui extends JFrame{
         insertPanel.setBorder(titleBorder);
         //insertPanel.add(new JLabel("새로운 직원정보 추가"));
 
-        //insertPanel First name
-        JPanel fNamePanel = new JPanel();
-        fNamePanel.setLayout(leftFL);
-        fNamePanel.add(new JLabel("First Name"));
-        //textField넣기
-        JTextField FNameText = new JTextField();
-        FNameText.setPreferredSize(new Dimension(200, 20));
-        fNamePanel.add(FNameText);
-
-        //insertPanel Middle init
-        JPanel midInitPanel = new JPanel();
-        midInitPanel.setLayout(leftFL);
-        midInitPanel.add(new JLabel("Middle Init"));
-        //textField넣기
-        JTextField MInitText = new JTextField();
-        MInitText.setPreferredSize(new Dimension(200, 20));
-        midInitPanel.add(MInitText);
-
-        //insertPanel Last name
-        JPanel lNamePanel = new JPanel();
-        lNamePanel.setLayout(leftFL);
-        lNamePanel.add(new JLabel("Last Name"));
-        //textField넣기
-        JTextField LNameText = new JTextField();
-        LNameText.setPreferredSize(new Dimension(200, 20));
-        lNamePanel.add(LNameText);
-
-        //insertPanel Ssn
-        JPanel ssnPanel = new JPanel();
-        ssnPanel.setLayout(leftFL);
-        ssnPanel.add(new JLabel("Ssn"));
-        //textField넣기
-        JTextField SsnText = new JTextField();
-        SsnText.setPreferredSize(new Dimension(200, 20));
-        ssnPanel.add(SsnText);
-
-        //insertPanel Birthdate
-        JPanel birthPanel = new JPanel();
-        birthPanel.setLayout(leftFL);
-        birthPanel.add(new JLabel("Birthdate"));
-        //textField넣기
-        JTextField birthText = new JTextField();
-        birthText.setPreferredSize(new Dimension(200, 20));
-        birthPanel.add(birthText);
-
-        //insertPanel Address
-        JPanel addrPanel = new JPanel();
-        addrPanel.setLayout(leftFL);
-        addrPanel.add(new JLabel("Address"));
-        //textField넣기
-        JTextField addrText = new JTextField();
-        addrText.setPreferredSize(new Dimension(200, 20));
-        addrPanel.add(addrText);
-
-        //insertPanel Sex
-        JPanel sexPanel = new JPanel();
-        sexPanel.setLayout(leftFL);
-        sexPanel.add(new JLabel("Sex"));
-        //insertPanel comboBox넣기
+        //insertionPanels
+        JPanel[] insertionPanels = new JPanel[INSERTION_OPTIONS.length];
+        JTextField[] insertionTexts = new JTextField[INSERTION_OPTIONS.length - 1];
         JComboBox<String> sexComboBox = new JComboBox<String>(SEXS);
         sexComboBox.setPreferredSize(new Dimension(100, 20));
-        sexPanel.add(sexComboBox);
+        for(int i = 0; i < INSERTION_OPTIONS.length; ++i) {
+            JPanel panel = new JPanel();
+            panel.setLayout(leftFL);
+            panel.add(new JLabel(INSERTION_OPTIONS[i]));
+            if (INSERTION_OPTIONS[i].equals("Sex")) {
+                panel.add(sexComboBox);
+            } else {
+                JTextField text = new JTextField();
+                text.setPreferredSize(new Dimension(200, 20));
+                panel.add(text);
+                insertionTexts[i > 6 ? i - 1 : i] = text;
+            }
+            insertionPanels[i] = panel;
+            insertPanel.add(panel);
+        }
 
-        //insertPanel Salary
-        JPanel salaryPanel = new JPanel();
-        salaryPanel.setLayout(leftFL);
-        salaryPanel.add(new JLabel("Salary"));
-        //textField넣기
-        JTextField salaryText = new JTextField();
-        salaryText.setPreferredSize(new Dimension(200, 20));
-        salaryPanel.add(salaryText);
-
-        //insertPanel Super_Ssn
-        JPanel sSsnPanel = new JPanel();
-        sSsnPanel.setLayout(leftFL);
-        sSsnPanel.add(new JLabel("Super_ssn"));
-        //textField넣기
-        JTextField SssnText = new JTextField();
-        SssnText.setPreferredSize(new Dimension(200, 20));
-        sSsnPanel.add(SssnText);
-
-        //insertPanel Dno
-        JPanel dnoPanel = new JPanel();
-        dnoPanel.setLayout(leftFL);
-        dnoPanel.add(new JLabel("Dno"));
-        //textField넣기
-        JTextField dnoText = new JTextField();
-        dnoText.setPreferredSize(new Dimension(200, 20));
-        dnoPanel.add(dnoText);
-
-        //insertPanel 패널들 집어넣기
-        insertPanel.add(fNamePanel);
-        insertPanel.add(midInitPanel);
-        insertPanel.add(lNamePanel);
-        insertPanel.add(ssnPanel);
-        insertPanel.add(birthPanel);
-        insertPanel.add(addrPanel);
-        insertPanel.add(sexPanel);
-        insertPanel.add(salaryPanel);
-        insertPanel.add(sSsnPanel);
-        insertPanel.add(dnoPanel);
         //버튼 집어넣기
         JButton insertBtn = new JButton("정보 추가하기");
         JPanel IBtnWrapper = new JPanel();
@@ -254,10 +182,61 @@ public class MyGui extends JFrame{
         Container container = getContentPane();
         container.add(totalPanel);
 
+        //search text
+        JTextField searchText = new JTextField();
+        searchText.setPreferredSize(new Dimension(200, 20));
+        //search department comboBox
+        JComboBox searchDepCB = new JComboBox(DEPARTMENT);
+        searchDepCB.setPreferredSize(new Dimension(100, 30));
+        //search birthdate comboBox
+        JComboBox searchBirthCB = new JComboBox(BIRTHDATE);
+        searchBirthCB.setPreferredSize(new Dimension(100, 30));
+        //search sex comboBox
+        JComboBox searchSCB = new JComboBox(SEXS);
+        searchSCB.setPreferredSize(new Dimension(100, 30));
+        //검색범위가 변경되면 세부 옵션이 달라짐
+        searchComboBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox) e.getSource(); // 콤보박스 알아내기
+                int index = cb.getSelectedIndex();// 선택된 아이템의 인덱스
+                //기존에 추가된 것들은 다 제거
+                searchWrapper.remove(searchDepCB);
+                searchWrapper.remove(searchSCB);
+                searchWrapper.remove(searchText);
+                searchWrapper.remove(searchBirthCB);
+                switch (index) {
+                    case 0:
+                        break;
+                    case 1:
+                        searchWrapper.add(searchDepCB);
+                        break;
+                    case 2:
+                        searchWrapper.add(searchSCB);
+                        break;
+                    case 3:
+                        searchWrapper.add(searchText);
+                        break;
+                    case 4:
+                        searchWrapper.add(searchBirthCB);
+                        break;
+                    default:
+                        searchWrapper.add(searchText);
+                }
+
+                System.out.println(index);
+            }
+        });
 
         //Action Listener
+        //검색 범위와 checkbox에서 column명을 가져와서 검색
         searchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                for(JCheckBox cb: checkBoxes) {
+                    if (cb.isSelected()) {
+                        System.out.println(cb.getLabel());
+                    }
+                }
+
                 /*
                 try {
                     insert = text.getText();
@@ -273,12 +252,25 @@ public class MyGui extends JFrame{
 
         updateBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                System.out.println(updateComboBox.getSelectedIndex());
+                System.out.println(updateValue.getText());
                 /*
                 try {
+                    for (int i = 0; i < resultTable.getRowCount(); i++) {
+                        String array[] = ta.get(i).split("&");
+                        if (check[i].isSelected()) {
+                            ssn.add(array[1]);
+                        }
+                        if (resultTable.getColumn(0)[i] == true) {
+
+                        }
+                    }
                     insert = text.getText();
-                    Dbinsert dbi = new Dbinsert(insert, name, login);
+                    Dbupdate dbu = new Dbupdate(ssn, insert, name, login);
+
                     Db2 db = new Db2(name, login);
                     dispose();
+
                 } catch (SQLException | IOException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -288,6 +280,11 @@ public class MyGui extends JFrame{
 
         insertBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                for (JTextField text: insertionTexts) {
+                    System.out.println(text.getText());
+                }
+                System.out.println(sexComboBox.getSelectedIndex());
+
                 /*
                 try {
                     insert = text.getText();
@@ -303,6 +300,13 @@ public class MyGui extends JFrame{
 
         deleteBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                System.out.println(resultTable.getRowCount());
+                System.out.println(resultTable.getColumn("선택"));
+                //몇번 행이 선택되었는지 확인
+                for(int i = 0; i < resultTable.getRowCount(); ++i) {
+                    System.out.println(resultTable.getValueAt(i, 0));
+                }
+
                 /*
                 try {
                     insert = text.getText();
@@ -438,6 +442,7 @@ public class MyGui extends JFrame{
 
         // 콤보박스에 Action 리스너 등록. 선택된 아이템의 이미지 출력
 
+        setTitle("database assignment1");
         pack();
         //전체 창 사이즈
         setSize(1000, 800);
@@ -445,7 +450,7 @@ public class MyGui extends JFrame{
         setVisible(true);
     }
 
-    private JScrollPane makeTable(Object[][] data, String[] header) {
+    private JTable makeTable(Object[][] data, String[] header) {
         DefaultTableModel model = new DefaultTableModel(data, header);
         JTable table = new JTable(model) {
             private static final long serialVersionUID = 1L;
@@ -466,8 +471,7 @@ public class MyGui extends JFrame{
         };
         table.setPreferredSize(new Dimension(650, 500));
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
-        JScrollPane scrollPane = new JScrollPane(table);
-        return scrollPane;
+        return table;
     }
 
 
