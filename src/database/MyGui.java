@@ -237,6 +237,38 @@ public class MyGui extends JFrame{
                     }
                 }
 
+                int index = searchComboBox.getSelectedIndex();// 선택된 아이템의 인덱스
+                Sellect_filter searchWithSelector;
+                switch (index) {
+                    case 0:
+                        searchWithSelector = new Sellect_filter("", "");
+                        break;
+                    case 1:
+                        searchWithSelector = new Sellect_filter("부서", "");
+                        break;
+                    case 2:
+                        //성별에 따라 출력
+                        searchWithSelector = new Sellect_filter("성별", searchSCB.getSelectedIndex() == 0 ? "F" : "M");
+                        break;
+                    case 3:
+                        searchWithSelector = new Sellect_filter("연봉", "");
+                        break;
+                    case 4:
+                        searchWithSelector = new Sellect_filter("생일", "");
+                        break;
+                    default:
+                        searchWithSelector = new Sellect_filter("부하직원", "");
+                }
+
+                for(String s: searchWithSelector.result) {
+                    System.out.println("aa " + s);
+                    String[] ss = s.split("&");
+                    for(String sss: ss) {
+                        System.out.print(sss + " ");
+                    }
+                    System.out.println();
+                }
+
                 /*
                 try {
                     insert = text.getText();
@@ -472,10 +504,5 @@ public class MyGui extends JFrame{
         table.setPreferredSize(new Dimension(650, 500));
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
         return table;
-    }
-
-
-    public static void main(String[] args) {
-        new MyGui();
     }
 }
