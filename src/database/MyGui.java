@@ -32,6 +32,7 @@ public class MyGui extends JFrame{
     String insert;
     ArrayList<String> ta;
     String[] login;
+    JTable resultTable;
 
     //검색범위 strings
     String[] SEARCH_SCOPES = {"전체", "부서", "성별", "연봉", "생일", "부하직원"};
@@ -111,8 +112,8 @@ public class MyGui extends JFrame{
         //table.setRowHeight(40);
         //table.setPreferredSize(new Dimension(700, 500));
         //JScrollPane scrollpane = new JScrollPane(table);
-        JTable resultTable = makeTable(data, CHECK_OPTIONS);
-        JScrollPane scrollpane = new JScrollPane(resultTable);
+        //JTable resultTable = makeTable(data, CHECK_OPTIONS);
+        JScrollPane scrollpane = new JScrollPane();
 
 
         //updatePanel에 comboBox넣기
@@ -268,6 +269,21 @@ public class MyGui extends JFrame{
                     }
                     System.out.println();
                 }
+
+                Object[][] mData = new Object[searchWithSelector.result.size()][CHECK_OPTIONS.length];
+                for (int i = 1; i < searchWithSelector.result.size(); ++i) {
+                    String[] subStr = searchWithSelector.result.get(i).split("&");
+                    mData[i - 1][0] = false;
+                    for (int k = 0; k < subStr.length; ++k) {
+                        mData[i - 1][k + 1] = subStr[k];
+                    }
+                }
+
+                resultTable = makeTable(mData, CHECK_OPTIONS);
+                scrollpane.add(resultTable);
+                
+
+                //받은 데이터 테이블에 넣어주기
 
                 /*
                 try {
