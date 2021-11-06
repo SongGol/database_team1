@@ -37,7 +37,7 @@ public class MyGui extends JFrame{
     //검색범위 strings
     String[] SEARCH_SCOPES = {"전체", "부서", "성별", "연봉", "생일", "부하직원"};
     //checkbox strings
-    String[] CHECK_OPTIONS = {"선택", "Name", "Ssn", "Bdate", "Address", "Sex", "Salary", "Supervisor", "Department"};
+    String[] CHECK_OPTIONS = {"선택", "Name", "Ssn", "Bdate", "Address", "Sex", "Supervisor", "Salary", "Department"};
     //update strings
     String[] UPDATE_OPTIONS = {"Address", "Sex", "Salary"};
     //Sex String
@@ -111,9 +111,11 @@ public class MyGui extends JFrame{
         //JTable table = new JTable(data, CHECK_OPTIONS);
         //table.setRowHeight(40);
         //table.setPreferredSize(new Dimension(700, 500));
-        //JScrollPane scrollpane = new JScrollPane(table);
+        //JScrollPane scrollpane = new JScrollPane(resultTable);
         //JTable resultTable = makeTable(data, CHECK_OPTIONS);
-        JScrollPane scrollpane = new JScrollPane();
+        Object[][] dummy = new Object[0][CHECK_OPTIONS.length];
+        JTable resultTable = makeTable(dummy, CHECK_OPTIONS);
+        JScrollPane scrollpane = new JScrollPane(resultTable);
 
 
         //updatePanel에 comboBox넣기
@@ -232,6 +234,9 @@ public class MyGui extends JFrame{
         //검색 범위와 checkbox에서 column명을 가져와서 검색
         searchBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                //테이블 초기화
+                removeALlRecords(resultTable);
+
                 for(JCheckBox cb: checkBoxes) {
                     if (cb.isSelected()) {
                         System.out.println(cb.getLabel());
@@ -270,17 +275,20 @@ public class MyGui extends JFrame{
                     System.out.println();
                 }
 
-                Object[][] mData = new Object[searchWithSelector.result.size()][CHECK_OPTIONS.length];
+                //테이블에 보여줄 원소 추가해주기
+                Object[] mData = new Object[CHECK_OPTIONS.length];
                 for (int i = 1; i < searchWithSelector.result.size(); ++i) {
                     String[] subStr = searchWithSelector.result.get(i).split("&");
-                    mData[i - 1][0] = false;
                     for (int k = 0; k < subStr.length; ++k) {
-                        mData[i - 1][k + 1] = subStr[k];
+                        mData[k + 1] = subStr[k];
                     }
+                    addRecord(resultTable, mData);
                 }
 
-                resultTable = makeTable(mData, CHECK_OPTIONS);
-                scrollpane.add(resultTable);
+
+                //resultTable = makeTable(mData, CHECK_OPTIONS);
+                //scrollpane.add(resultTable);
+
                 
 
                 //받은 데이터 테이블에 넣어주기
@@ -520,5 +528,35 @@ public class MyGui extends JFrame{
         table.setPreferredSize(new Dimension(650, 500));
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
         return table;
+    }
+
+    //테이블에 기록 추가
+    public void addRecord(JTable table ,Object[] record) {
+        DefaultTableModel model = (DefaultTableModel)table.getModel();
+
+        for (Object o: record) {
+            System.out.println("addRecord" + o);
+        }
+
+        model.addRow(record);
+    }
+
+    //테이블에서 기록 삭제
+    public void removeRecord(JTable table, int index) {
+        DefaultTableModel model = (DefaultTableModel)table.getModel();
+        if (index < 0) {
+            if(table.getRowCount() == 0)//비어있는 테이블이면
+                return;
+            index = 0;
+        }
+        model.removeRow(index);
+    }
+
+    //테이블에서 모든 기록 삭제
+    public void removeALlRecords(JTable table) {
+        DefaultTableModel model = (DefaultTableModel)table.getModel();
+        for (int i = model.getRowCount() - 1; i >= 0; i--) {
+            model.removeRow(i);
+        }
     }
 }

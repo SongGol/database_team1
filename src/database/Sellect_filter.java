@@ -30,8 +30,8 @@ public class Sellect_filter{
             String columns = "NAME&SSN&BDATE&ADDRESS&SEX&SALARY&SUPERVISOR&DEPARTMENT";
             result.add(columns);
             for (HashMap<String, Object> row : tmp){
-                String row_one = row.get("Name")+" "+row.get("Ssn")+row.get("Bdate")+" "+row.get("Address")+" "
-                        +row.get("Sex")+" "+row.get("Supervisor")+" "+row.get("Salary")+" "+row.get("Dname");
+                String row_one = row.get("Name")+"&"+row.get("Ssn")+"&"+row.get("Bdate")+"&"+row.get("Address")+"&"
+                        +row.get("Sex")+"&"+row.get("Supervisor")+"&"+row.get("Salary")+"&"+row.get("Dname");
                 result.add(row_one);
                 System.out.println(row_one);
             }
@@ -42,8 +42,8 @@ public class Sellect_filter{
             String columns = "NAME&SSN&BDATE&ADDRESS&SEX&SALARY&SUPERVISOR&DEPARTMENT";
             result.add(columns);
             for (HashMap<String, Object> row : tmp){
-                String row_one = row.get("Name")+" "+row.get("Ssn")+row.get("Bdate")+" "+row.get("Address")+" "
-                        +row.get("Sex")+" "+row.get("Supervisor")+" "+row.get("Salary")+" "+row.get("Dname");
+                String row_one = row.get("Name")+"&"+row.get("Ssn")+"&"+row.get("Bdate")+"&"+row.get("Address")+"&"
+                        +row.get("Sex")+"&"+row.get("Supervisor")+"&"+row.get("Salary")+"&"+row.get("Dname");
                 System.out.println(row_one);
 //                result.add(row_one);
             }
@@ -54,8 +54,8 @@ public class Sellect_filter{
             String columns = "NAME&SSN&BDATE&ADDRESS&SEX&SALARY&SUPERVISOR&DEPARTMENT";
             result.add(columns);
             for (HashMap<String, Object> row : tmp){
-                String row_one = row.get("Name")+" "+row.get("Ssn")+row.get("Bdate")+ " "+row.get("Address")+" "
-                        +row.get("Sex")+" "+row.get("Supervisor")+" "+row.get("Salary")+" "+row.get("Dname");
+                String row_one = row.get("Name")+"&"+row.get("Ssn")+"&"+row.get("Bdate")+"&"+row.get("Address")+"&"
+                        +row.get("Sex")+"&"+row.get("Supervisor")+"&"+row.get("Salary")+"&"+row.get("Dname");
                 System.out.println(row_one);
 //                result.add(row_one);
             }
@@ -66,8 +66,8 @@ public class Sellect_filter{
             String columns = "NAME&SSN&BDATE&ADDRESS&SEX&SALARY&SUPERVISOR&DEPARTMENT";
             result.add(columns);
             for (HashMap<String, Object> row : tmp){
-                String row_one = row.get("Name")+" "+row.get("Ssn")+row.get("Bdate")+" "+row.get("Address")+" "
-                        +row.get("Sex")+" "+row.get("Supervisor")+" "+row.get("Salary")+" "+row.get("Dname");
+                String row_one = row.get("Name")+"&"+row.get("Ssn")+"&"+row.get("Bdate")+"&"+row.get("Address")+"&"
+                        +row.get("Sex")+"&"+row.get("Supervisor")+"&"+row.get("Salary")+"&"+row.get("Dname");
                 System.out.println(row_one);
 //                result.add(row_one);
             }
