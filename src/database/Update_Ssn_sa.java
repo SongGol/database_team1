@@ -12,7 +12,7 @@ public class Update_Ssn_sa extends Update_From_Ssn{
 
     private void Update(){
         for(String Ssn : this.to_update_list){
-            String update_query = "UPDATE EMPLOYEE SET Adress = "+this.input_source+" WHERE Ssn = "+Ssn;
+            String update_query = "UPDATE EMPLOYEE SET Salary = "+this.input_source+" WHERE Ssn = "+Ssn;
             try {
                 this.conn.connect();
                 this.conn.modify(update_query);
