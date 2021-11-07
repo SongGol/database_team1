@@ -263,8 +263,10 @@ public class MyGui extends JFrame{
                         searchWithSelector = new Sellect_filter("연봉", searchText.getText().isEmpty() ? "0" : searchText.getText());
                         break;
                     case 4:
-
-                        searchWithSelector = new Sellect_filter("생일", "");
+                        //생일에 따라 출력
+                        String birth = BIRTHDATE[searchBirthCB.getSelectedIndex()];
+                        int month = Integer.parseInt(birth.substring(0, birth.length()-1));
+                        searchWithSelector = new Sellect_filter("생일", String.format("%02d", month));
                         break;
                     default:
                         //상사 번호를 쓰면 부하가 출력

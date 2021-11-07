@@ -58,7 +58,7 @@ public class Sellect_filter{
                 String row_one = row.get("Name")+"&"+row.get("Ssn")+"&"+row.get("Bdate")+"&"+row.get("Address")+"&"
                         +row.get("Sex")+"&"+row.get("Supervisor")+"&"+row.get("Salary")+"&"+row.get("Dname");
                 System.out.println(row_one);
-//                result.add(row_one);
+                result.add(row_one);
             }
         }else if(filter.equals("부하직원")){
             Su_Select su_select = new Su_Select(Condition);
