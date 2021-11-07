@@ -267,7 +267,8 @@ public class MyGui extends JFrame{
                         searchWithSelector = new Sellect_filter("생일", "");
                         break;
                     default:
-                        searchWithSelector = new Sellect_filter("부하직원", "");
+                        //상사 번호를 쓰면 부하가 출력
+                        searchWithSelector = new Sellect_filter("부하직원", searchText.getText().isEmpty() ? "0" : searchText.getText());
                 }
 
                 for(String r: searchWithSelector.result) {

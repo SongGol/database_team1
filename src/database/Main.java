@@ -14,7 +14,7 @@ public class Main {
         //생일
         Sellect_filter Birthday = new Sellect_filter("생일", "1965-01-09");
         //부하직원
-        Sellect_filter Supvervising = new Sellect_filter("부하직원", "Franklin T Wong");
+        Sellect_filter Supvervising = new Sellect_filter("부하직원", "333445555");
 
     }
 }
