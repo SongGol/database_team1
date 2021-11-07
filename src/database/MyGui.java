@@ -9,7 +9,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 
 //윈도우 창을 띄워주는데 쓰는 클래스 JFrame
@@ -178,107 +177,51 @@ public class MyGui extends JFrame{
 
         //checkBox와 option연동
 
+
         //search text
         JTextField searchText = new JTextField();
         searchText.setPreferredSize(new Dimension(200, 20));
-        searchWrapper.add(searchText);
         //search department comboBox
         JComboBox searchDepCB = new JComboBox(DEPARTMENT);
         searchDepCB.setPreferredSize(new Dimension(100, 30));
-        searchWrapper.add(searchDepCB);
         //search birthdate comboBox
         JComboBox searchBirthCB = new JComboBox(BIRTHDATE);
         searchBirthCB.setPreferredSize(new Dimension(100, 30));
-        searchWrapper.add(searchBirthCB);
         //search sex comboBox
         JComboBox searchSCB = new JComboBox(SEXS);
         searchSCB.setPreferredSize(new Dimension(100, 30));
-        searchWrapper.add(searchSCB);
         //검색범위가 변경되면 세부 옵션이 달라짐
-
-
-        //처음엔 안보이게 설정
-        searchText.setVisible(false);
-        searchDepCB.setVisible(false);
-        searchBirthCB.setVisible(false);
-        searchSCB.setVisible(false);
-
-        //JComboBox 리스트 생성
-        List<JComboBox> selectJcombo = new ArrayList<JComboBox>();
-        selectJcombo.add(searchDepCB);
-        selectJcombo.add(searchSCB);
-        selectJcombo.add(searchBirthCB);
-
         searchComboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JComboBox cb = (JComboBox) e.getSource(); // 콤보박스 알아내기
                 int index = cb.getSelectedIndex();// 선택된 아이템의 인덱스
-                //"전체" 누르면 다시 사라지도록
-                if (index == 0) {
-                    searchText.setVisible(false);
-                    searchDepCB.setVisible(false);
-                    searchBirthCB.setVisible(false);
-                    searchSCB.setVisible(false);
+                //기존에 추가된 것들은 다 제거
+                searchWrapper.remove(searchDepCB);
+                searchWrapper.remove(searchSCB);
+                searchWrapper.remove(searchText);
+                searchWrapper.remove(searchBirthCB);
+                switch (index) {
+                    case 0:
+                        break;
+                    case 1:
+                        searchWrapper.add(searchDepCB);
+                        break;
+                    case 2:
+                        searchWrapper.add(searchSCB);
+                        break;
+                    case 3:
+                        searchWrapper.add(searchText);
+                        break;
+                    case 4:
+                        searchWrapper.add(searchBirthCB);
+                        break;
+                    default:
+                        searchWrapper.add(searchText);
                 }
-                //index 값 이용해서 리스트 값 꺼내와서 보이게 설정
-                for (JComboBox j : selectJcombo) {
-                    if (index == selectJcombo.indexOf(j) + 1) {
-                        j.setVisible(true);
-                    }
-                    else j.setVisible(false);
-                }
-                //textFied index 로 보이기 설정
-                if (index == 4 || index == 5) {
-                    searchText.setVisible(true);
-                }
+
                 System.out.println(index);
             }
         });
-//
-//        //search text
-//        JTextField searchText = new JTextField();
-//        searchText.setPreferredSize(new Dimension(200, 20));
-//        //search department comboBox
-//        JComboBox searchDepCB = new JComboBox(DEPARTMENT);
-//        searchDepCB.setPreferredSize(new Dimension(100, 30));
-//        //search birthdate comboBox
-//        JComboBox searchBirthCB = new JComboBox(BIRTHDATE);
-//        searchBirthCB.setPreferredSize(new Dimension(100, 30));
-//        //search sex comboBox
-//        JComboBox searchSCB = new JComboBox(SEXS);
-//        searchSCB.setPreferredSize(new Dimension(100, 30));
-//        //검색범위가 변경되면 세부 옵션이 달라짐
-//        searchComboBox.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                JComboBox cb = (JComboBox) e.getSource(); // 콤보박스 알아내기
-//                int index = cb.getSelectedIndex();// 선택된 아이템의 인덱스
-//                //기존에 추가된 것들은 다 제거
-//                searchWrapper.remove(searchDepCB);
-//                searchWrapper.remove(searchSCB);
-//                searchWrapper.remove(searchText);
-//                searchWrapper.remove(searchBirthCB);
-//                switch (index) {
-//                    case 0:
-//                        break;
-//                    case 1:
-//                        searchWrapper.add(searchDepCB);
-//                        break;
-//                    case 2:
-//                        searchWrapper.add(searchSCB);
-//                        break;
-//                    case 3:
-//                        searchWrapper.add(searchText);
-//                        break;
-//                    case 4:
-//                        searchWrapper.add(searchBirthCB);
-//                        break;
-//                    default:
-//                        searchWrapper.add(searchText);
-//                }
-//
-//                System.out.println(index);
-//            }
-//        });
 
         //Action Listener
         //검색 범위와 checkbox에서 column명을 가져와서 검색
