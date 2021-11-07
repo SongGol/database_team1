@@ -38,7 +38,7 @@ public class Sellect_filter{
                 System.out.println(return_row);
                 result.add(return_row);
             }
-        } else if (filter.equals("월급")) {
+        } else if (filter.equals("연봉")) {
             S_Select s_select = new S_Select(Condition);
             ArrayList<HashMap<String,Object>> result_list = new ArrayList<HashMap<String,Object>>();
             result_list = s_select.Select_All();
