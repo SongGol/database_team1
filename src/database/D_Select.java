@@ -18,7 +18,8 @@ public class D_Select extends Select {
                 " FROM DEPARTMENT AS d LEFT JOIN (SELECT concat(e.Fname,\" \", e.Minit,\" \" ,e.Lname) AS Name," +
                 " e.Ssn, e.Address, e.Sex,concat(s.Fname, \" \", s.Minit, \" \", s.Lname) AS Supervisor" +
                 ", e.Salary, e.Dno FROM EMPLOYEE AS e LEFT OUTER JOIN EMPLOYEE AS s ON e.Super_ssn = s.Ssn) AS e ON e.Dno = d.Dnumber"
-                + "WHERE d.Dname LIKE '" + filter_condition + "'";
+                + " WHERE d.Dname LIKE '" + filter_condition + "'";
+        System.out.println(query);
         try {
             result = conn.search(query);
             conn.close();

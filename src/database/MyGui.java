@@ -45,7 +45,7 @@ public class MyGui extends JFrame{
     //insert strings
     String[] INSERTION_OPTIONS = {"First Name", "Middle Init", "Last Name", "Ssn", "Birthdate", "Address", "Sex", "Salary", "Super_ssn", "Dno"};
     //부서 정보
-    String[] DEPARTMENT = {"Research", "Headquarter", "Administration"};
+    String[] DEPARTMENT = {"Research", "Headquarters", "Administration"};
     //생일 정보
     String[] BIRTHDATE = {"1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"};
 
