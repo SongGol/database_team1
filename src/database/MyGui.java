@@ -273,10 +273,6 @@ public class MyGui extends JFrame{
                         searchWithSelector = new Sellect_filter("부하직원", searchText.getText().isEmpty() ? "0" : searchText.getText());
                 }
 
-                for(String r: searchWithSelector.result) {
-                    System.out.println("result " + r);
-                }
-
                 //테이블에 보여줄 원소 추가해주기
                 Object[] mData = new Object[CHECK_OPTIONS.length];
                 for (int i = 1; i < searchWithSelector.result.size(); ++i) {
@@ -342,6 +338,24 @@ public class MyGui extends JFrame{
                     System.out.println(text.getText());
                 }
                 System.out.println(sexComboBox.getSelectedIndex());
+
+                E_Insert insertPerson = new E_Insert(
+                        insertionTexts[0].getText().isEmpty() ? "Default" : insertionTexts[0].getText(),
+                        insertionTexts[1].getText().isEmpty() ? "Default" : insertionTexts[1].getText(),
+                        insertionTexts[2].getText().isEmpty() ? "Default" : insertionTexts[2].getText(),
+                        insertionTexts[3].getText(),
+                        insertionTexts[4].getText().isEmpty() ? "1111-11-11" : insertionTexts[4].getText(),
+                        insertionTexts[5].getText().isEmpty() ? "Default" : insertionTexts[5].getText(),
+                        SEXS[sexComboBox.getSelectedIndex()],
+                        insertionTexts[6].getText().isEmpty() ? "0.00" : insertionTexts[6].getText(),
+                        insertionTexts[7].getText().isEmpty() ? "Default" : insertionTexts[7].getText(),
+                        insertionTexts[8].getText().isEmpty() ? "4" : insertionTexts[8].getText()
+                );
+
+                for (JTextField t: insertionTexts) {
+                    System.out.println("insert: " + t.getText());
+                }
+                System.out.println("insert: "+SEXS[sexComboBox.getSelectedIndex()]);
 
                 /*
                 try {
