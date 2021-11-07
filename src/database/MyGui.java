@@ -24,14 +24,6 @@ import java.util.*;
 //JTable 검색결과 표를 만드는데 사용
 
 public class MyGui extends JFrame{
-    String[] tables;
-    String val;
-    String name;
-    int va = 0;
-    ArrayList<String> s;
-    String insert;
-    ArrayList<String> ta;
-    String[] login;
     JTable resultTable;
 
     //검색범위 strings
@@ -113,7 +105,7 @@ public class MyGui extends JFrame{
 
         //DBPanel 크기 조절
         Object[][] dummy = new Object[0][CHECK_OPTIONS.length];
-        resultTable = makeTable(dummy, CHECK_OPTIONS);
+        resultTable = makeTable(dummy, checkOptions);
         JScrollPane scrollpane = new JScrollPane(resultTable);
 
 
@@ -239,9 +231,10 @@ public class MyGui extends JFrame{
                 removeALlRecords(resultTable);
 
                 setCheckOptions();
+
                 ArrayList<String> checkColumns = new ArrayList<>();
-                for (int i = 1; i < checkOptions.size(); ++i) {
-                    checkColumns.add(checkOptions.get(i));
+                for (int i = 1; i < CHECK_OPTIONS.length; ++i) {
+                    checkColumns.add(CHECK_OPTIONS[i]);
                 }
 
                 int index = searchComboBox.getSelectedIndex();// 선택된 아이템의 인덱스
@@ -284,6 +277,7 @@ public class MyGui extends JFrame{
                 //setCheckOptions();
                 //테이블 재정의
                 //resultTable = makeTable(new Object[0][checkOptions.size()], checkOptions.toArray(String[]::new));
+                repaintTable(searchWrapper, resultTable, checkBoxes);
 
                 //테이블에 보여줄 원소 추가해주기
                 Object[] mData = new Object[checkColumns.size() + 1];
@@ -391,8 +385,13 @@ public class MyGui extends JFrame{
         }
     }
 
-    private JTable makeTable(Object[][] data, String[] header) {
-        DefaultTableModel model = new DefaultTableModel(data, header);
+    private JTable makeTable(Object[][] data, ArrayList<String> header) {
+        DefaultTableModel model = new DefaultTableModel(data, header.toArray());
+
+        for(String i : header) {
+            System.out.println("table header: " + i);
+        }
+
         JTable table = new JTable(model) {
             private static final long serialVersionUID = 1L;
 
@@ -449,5 +448,33 @@ public class MyGui extends JFrame{
         for (int i = model.getRowCount() - 1; i >= 0; i--) {
             model.removeRow(i);
         }
+    }
+
+    //다시 그리기
+    private void repaintTable(JPanel wrapper, JTable table, JCheckBox[] cb) {
+        int j = 0;
+        for (int i = 0; i < cb.length; i++) {
+            if (cb[i].isSelected()) {
+                j++;
+            }
+
+        }
+        for (int i = 0; i < cb.length; i++) {
+            if (cb[i].isSelected()) {
+                System.out.println(i);
+                table.getColumn(cb[i].getText()).setWidth(960 / j);
+                table.getColumn(cb[i].getText()).setMinWidth(960 / j);
+                table.getColumn(cb[i].getText()).setMaxWidth(960 / j);
+
+
+            } else if (!cb[i].isSelected()) {
+                table.getColumn(cb[i].getText()).setWidth(0);
+                table.getColumn(cb[i].getText()).setMinWidth(0);
+                table.getColumn(cb[i].getText()).setMaxWidth(0);
+
+            }
+
+        }
+        wrapper.repaint();
     }
 }
