@@ -237,17 +237,14 @@ public class MyGui extends JFrame{
                     checkColumns.add(CHECK_OPTIONS[i]);
                 }
 
+                for (String k : checkColumns) {
+                    System.out.println("checkColumns: "+k);
+                }
+
                 int index = searchComboBox.getSelectedIndex();// 선택된 아이템의 인덱스
                 Sellect_filter searchWithSelector;
                 switch (index) {
                     case 0:
-
-                        for (String k : checkOptions) {
-                            System.out.println("check options: "+k);
-                        }
-
-
-
                         searchWithSelector = new Sellect_filter("", "", checkColumns);
                         break;
                     case 1:
@@ -278,10 +275,11 @@ public class MyGui extends JFrame{
                 //테이블 재정의
                 //resultTable = makeTable(new Object[0][checkOptions.size()], checkOptions.toArray(String[]::new));
                 repaintTable(searchWrapper, resultTable, checkBoxes);
+                totalPanel.repaint();
 
                 //테이블에 보여줄 원소 추가해주기
                 Object[] mData = new Object[checkColumns.size() + 1];
-                for (int i = 1; i < searchWithSelector.result.size(); ++i) {
+                for (int i = 0; i < searchWithSelector.result.size(); ++i) {
                     String[] subStr = searchWithSelector.result.get(i).split("&");
                     mData[0]= false;
                     for (int k = 0; k < subStr.length; ++k) {
@@ -452,7 +450,7 @@ public class MyGui extends JFrame{
 
     //다시 그리기
     private void repaintTable(JPanel wrapper, JTable table, JCheckBox[] cb) {
-        int j = 0;
+        int j = 1;
         for (int i = 0; i < cb.length; i++) {
             if (cb[i].isSelected()) {
                 j++;
@@ -465,8 +463,6 @@ public class MyGui extends JFrame{
                 table.getColumn(cb[i].getText()).setWidth(960 / j);
                 table.getColumn(cb[i].getText()).setMinWidth(960 / j);
                 table.getColumn(cb[i].getText()).setMaxWidth(960 / j);
-
-
             } else if (!cb[i].isSelected()) {
                 table.getColumn(cb[i].getText()).setWidth(0);
                 table.getColumn(cb[i].getText()).setMinWidth(0);
