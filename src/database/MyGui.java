@@ -38,6 +38,8 @@ public class MyGui extends JFrame{
     String[] SEARCH_SCOPES = {"전체", "부서", "성별", "연봉", "생일", "부하직원"};
     //checkbox strings
     String[] CHECK_OPTIONS = {"선택", "Name", "Ssn", "Bdate", "Address", "Sex", "Supervisor", "Salary", "Department"};
+    //checkBox에 해당하는 JCheckBox
+    JCheckBox[] checkBoxes = new JCheckBox[CHECK_OPTIONS.length - 1];
     //update strings
     String[] UPDATE_OPTIONS = {"Address", "Sex", "Salary"};
     //Sex String
@@ -48,7 +50,8 @@ public class MyGui extends JFrame{
     String[] DEPARTMENT = {"Research", "Headquarters", "Administration"};
     //생일 정보
     String[] BIRTHDATE = {"1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"};
-
+    //동적으로 확인 되는 checkBox
+    ArrayList<String> checkOptions = new ArrayList<>();
 
     //테스트용 더미 데이터
     Object[][] data = {{false, "F T W", "333445555", "1955-12-08", "638 V, H", "M", "40000", "J E B", "Research"},
@@ -96,7 +99,6 @@ public class MyGui extends JFrame{
         searchOptionPanel.add(searchWrapper);
 
         //checkPanel에 checkbox넣기
-        JCheckBox[] checkBoxes = new JCheckBox[CHECK_OPTIONS.length - 1];
         for(int i = 1; i < CHECK_OPTIONS.length; ++i) {
             checkBoxes[i - 1] = new JCheckBox(CHECK_OPTIONS[i], true);
             checkBoxes[i - 1].setPreferredSize(new Dimension(100, 30));
@@ -106,15 +108,12 @@ public class MyGui extends JFrame{
         JButton searchBtn = new JButton("검색");
         checkPanel.add(searchBtn);
 
+        //선택된 check option들 초기화
+        setCheckOptions();
 
         //DBPanel 크기 조절
-        //JTable table = new JTable(data, CHECK_OPTIONS);
-        //table.setRowHeight(40);
-        //table.setPreferredSize(new Dimension(700, 500));
-        //JScrollPane scrollpane = new JScrollPane(resultTable);
-        //JTable resultTable = makeTable(data, CHECK_OPTIONS);
         Object[][] dummy = new Object[0][CHECK_OPTIONS.length];
-        JTable resultTable = makeTable(dummy, CHECK_OPTIONS);
+        resultTable = makeTable(dummy, CHECK_OPTIONS);
         JScrollPane scrollpane = new JScrollPane(resultTable);
 
 
@@ -180,10 +179,12 @@ public class MyGui extends JFrame{
         totalPanel.add(insertPanel);
         //this.add(totalPanel);
 
-
         //contentPane사용
         Container container = getContentPane();
         container.add(totalPanel);
+
+        //checkBox와 option연동
+
 
         //search text
         JTextField searchText = new JTextField();
@@ -237,44 +238,55 @@ public class MyGui extends JFrame{
                 //테이블 초기화
                 removeALlRecords(resultTable);
 
-                for(JCheckBox cb: checkBoxes) {
-                    if (cb.isSelected()) {
-                        System.out.println(cb.getLabel());
-                    }
+                setCheckOptions();
+                ArrayList<String> checkColumns = new ArrayList<>();
+                for (int i = 1; i < checkOptions.size(); ++i) {
+                    checkColumns.add(checkOptions.get(i));
                 }
 
                 int index = searchComboBox.getSelectedIndex();// 선택된 아이템의 인덱스
                 Sellect_filter searchWithSelector;
                 switch (index) {
                     case 0:
-                        searchWithSelector = new Sellect_filter("", "");
+
+                        for (String k : checkOptions) {
+                            System.out.println("check options: "+k);
+                        }
+
+
+
+                        searchWithSelector = new Sellect_filter("", "", checkColumns);
                         break;
                     case 1:
                         //null pointer exception발생
                         System.out.println("부서 index: " + searchDepCB.getSelectedIndex() + ", " + DEPARTMENT[searchDepCB.getSelectedIndex()]);
-                        searchWithSelector = new Sellect_filter("부서", DEPARTMENT[searchDepCB.getSelectedIndex()]);
+                        searchWithSelector = new Sellect_filter("부서", DEPARTMENT[searchDepCB.getSelectedIndex()], checkColumns);
                         break;
                     case 2:
                         //성별에 따라 출력
-                        searchWithSelector = new Sellect_filter("성별", searchSCB.getSelectedIndex() == 0 ? "F" : "M");
+                        searchWithSelector = new Sellect_filter("성별", searchSCB.getSelectedIndex() == 0 ? "F" : "M", checkColumns);
                         break;
                     case 3:
                         //연봉에 따라 출력
-                        searchWithSelector = new Sellect_filter("연봉", searchText.getText().isEmpty() ? "0" : searchText.getText());
+                        searchWithSelector = new Sellect_filter("연봉", searchText.getText().isEmpty() ? "0" : searchText.getText(), checkColumns);
                         break;
                     case 4:
                         //생일에 따라 출력
                         String birth = BIRTHDATE[searchBirthCB.getSelectedIndex()];
                         int month = Integer.parseInt(birth.substring(0, birth.length()-1));
-                        searchWithSelector = new Sellect_filter("생일", String.format("%02d", month));
+                        searchWithSelector = new Sellect_filter("생일", String.format("%02d", month), checkColumns);
                         break;
                     default:
                         //상사 번호를 쓰면 부하가 출력
-                        searchWithSelector = new Sellect_filter("부하직원", searchText.getText().isEmpty() ? "0" : searchText.getText());
+                        searchWithSelector = new Sellect_filter("부하직원", searchText.getText().isEmpty() ? "0" : searchText.getText(), checkColumns);
                 }
+                //checkbox 재확인
+                //setCheckOptions();
+                //테이블 재정의
+                //resultTable = makeTable(new Object[0][checkOptions.size()], checkOptions.toArray(String[]::new));
 
                 //테이블에 보여줄 원소 추가해주기
-                Object[] mData = new Object[CHECK_OPTIONS.length];
+                Object[] mData = new Object[checkColumns.size() + 1];
                 for (int i = 1; i < searchWithSelector.result.size(); ++i) {
                     String[] subStr = searchWithSelector.result.get(i).split("&");
                     mData[0]= false;
@@ -290,27 +302,40 @@ public class MyGui extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 System.out.println(updateComboBox.getSelectedIndex());
                 System.out.println(updateValue.getText());
-                /*
-                try {
-                    for (int i = 0; i < resultTable.getRowCount(); i++) {
-                        String array[] = ta.get(i).split("&");
-                        if (check[i].isSelected()) {
-                            ssn.add(array[1]);
-                        }
-                        if (resultTable.getColumn(0)[i] == true) {
 
+                String what = "";
+                String input = updateValue.getText();;
+                switch (updateComboBox.getSelectedIndex()) {
+                    case 0:
+                        //주소 변경
+                        what = "주소";
+                        break;
+                    case 1:
+                        //성별 변경
+                        what = "성별";
+                        break;
+                    default:
+                        //연봉 변경
+                        what = "월급";
+                }
+                DefaultTableModel model = (DefaultTableModel)resultTable.getModel();
+                ArrayList<String> targetSsn = new ArrayList<>();
+                for (int i = model.getRowCount() - 1; i >= 0; i--) {
+                    if (model.getValueAt(i, 0).equals(true)){
+                        // arrayList에 저장
+                        targetSsn.add(model.getValueAt(i, 2).toString());
+                        //테이블에서 수정
+                        if (what.equals("주소")){
+                            model.setValueAt(input, i, 4);
+                        } else if (what.equals("성별")) {
+                            model.setValueAt(input, i, 5);
+                        } else {
+                            model.setValueAt(input, i, 7);
                         }
                     }
-                    insert = text.getText();
-                    Dbupdate dbu = new Dbupdate(ssn, insert, name, login);
-
-                    Db2 db = new Db2(name, login);
-                    dispose();
-
-                } catch (SQLException | IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }*/
+                }
+                //업데이트
+                Update_filter update_filter = new Update_filter(what, input, targetSsn);
             }
         });
 
@@ -330,7 +355,7 @@ public class MyGui extends JFrame{
                         insertionTexts[5].getText().isEmpty() ? "Default" : insertionTexts[5].getText(),
                         SEXS[sexComboBox.getSelectedIndex()],
                         insertionTexts[6].getText().isEmpty() ? "0.00" : insertionTexts[6].getText(),
-                        insertionTexts[7].getText().isEmpty() ? "Default" : insertionTexts[7].getText(),
+                        insertionTexts[7].getText().isEmpty() ? "NULL" : insertionTexts[7].getText(),
                         insertionTexts[8].getText().isEmpty() ? "4" : insertionTexts[8].getText()
                 );
 
@@ -343,155 +368,10 @@ public class MyGui extends JFrame{
 
         deleteBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("테이블 크기: "+resultTable.getRowCount());
-                //몇번 행이 선택되었는지 확인
-//                for(int i = 0; i < resultTable.getRowCount(); ++i) {
-//                    System.out.println(resultTable.getValueAt(i, 0));
-//
-//                    if (resultTable.getValueAt(i, 0).toString().equals("true")) {
-//                        System.out.println(111111111);
-//                    }
-//                }
-
                 //checkBox가 선택된 요소만 제거
                 removeSelectedRecords(resultTable);
-
-
-
-                /*
-                try {
-                    insert = text.getText();
-                    Dbinsert dbi = new Dbinsert(insert, name, login);
-                    Db2 db = new Db2(name, login);
-                    dispose();
-                } catch (SQLException | IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }*/
             }
         });
-        /*
-
-        String[] dname = {"부서별", "Research", "Administration", "Headquarters"};
-        this.name = name;
-        this.s = new ArrayList<String>(); //s;
-        this.ta = new ArrayList<String>();//ta;
-        this.login = login;
-        int size = 0;
-        String[] header = new String[s.size()];
-
-        for (String temp : s) {
-            header[size++] = temp;
-        }
-        String[][] cc = new String[ta.size()][s.size()];
-        for (int i = 0; i < ta.size(); i++) {
-            String array[] = ta.get(i).split("&");
-            for (int j = 0; j < s.size(); j++) {
-                cc[i][j] = array[j];
-            }
-        }
-
-        JButton[] button = new JButton[s.size()];
-        JPanel checkPanel = new JPanel();
-        JPanel atrPanel = new JPanel();
-        JCheckBox[] atr = new JCheckBox[s.size()];
-        JCheckBox[] check = new JCheckBox[ta.size()];
-        JTextField text = new JTextField();
-        JButton updateButton = new JButton("선택수정");
-        JButton insertButton = new JButton("삽입");
-        JButton deleteTypedButton = new JButton("입력삭제");
-        JButton deleteSelectedButton = new JButton("선택삭제");
-
-        Container d = getContentPane();
-        setTitle("database");
-        d.revalidate();
-        JPanel c = new JPanel();
-        // c.setLayout(new FlowLayout());
-
-
-        JComboBox combo = new JComboBox(tables);
-        c.add(combo, BorderLayout.NORTH);
-        JComboBox combo2 = new JComboBox(dname);
-        c.add(combo2, BorderLayout.NORTH);
-        Font font = new Font("돋움", 4, 25);
-        Font font2 = new Font("돋움", 4, 20);
-        text.setFont(font);
-        JTable table = new JTable(cc, header);
-        table.setRowHeight(40);
-        JScrollPane scrollpane = new JScrollPane(table);
-        table.setPreferredSize(new Dimension(700, 500));
-        scrollpane.setPreferredSize(new Dimension(960, 500));
-        c.add(updateButton);
-        updateButton.setPreferredSize(new Dimension(100, 40));
-        c.add(insertButton);
-        insertButton.setPreferredSize(new Dimension(100, 40));
-        deleteSelectedButton.setPreferredSize(new Dimension(100, 40));
-        c.add(deleteTypedButton);
-        c.add(deleteSelectedButton);
-        c.add(text);
-        text.setPreferredSize(new Dimension(900, 40));
-        deleteTypedButton.setPreferredSize(new Dimension(100, 40));
-        ActionListener listener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                p.add(e.getActionCommand());
-            }
-        };
-
-        for (int m = 0; m < ta.size(); m++) {
-            check[m] = new JCheckBox("tuple" + (m + 1) + "");
-            check[m].setPreferredSize(new Dimension(90, 50));
-            checkPanel.add(check[m], BorderLayout.CENTER);
-        }
-        c.add(checkPanel);
-
-
-        for (int j = 0; j < s.size(); j++) {
-            atr[j] = new JCheckBox();
-            atr[j].setText(s.get(j));
-            atr[j].setFont(font2);
-            atr[j].setSelected(true);
-            atr[j].setPreferredSize(new Dimension(100, 100));
-            atr[j].addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    int j = 0;
-                    for (int i = 0; i < s.size(); i++) {
-                        if (atr[i].isSelected()) {
-                            j++;
-                        }
-
-                    }
-                    for (int i = 0; i < s.size(); i++) {
-
-                        if (atr[i].isSelected()) {
-                            System.out.println(i);
-                            table.getColumn(atr[i].getText()).setWidth(960 / j);
-                            table.getColumn(atr[i].getText()).setMinWidth(960 / j);
-                            table.getColumn(atr[i].getText()).setMaxWidth(960 / j);
-
-
-                        } else if (!atr[i].isSelected()) {
-                            table.getColumn(atr[i].getText()).setWidth(0);
-                            table.getColumn(atr[i].getText()).setMinWidth(0);
-                            table.getColumn(atr[i].getText()).setMaxWidth(0);
-
-                        }
-
-                    }
-                    c.repaint();
-                    d.add(c);
-                }
-            });
-
-            atrPanel.add(atr[j], BorderLayout.SOUTH);
-        }
-        c.add(atrPanel);
-        c.add(scrollpane, BorderLayout.SOUTH);
-
-        d.add(c);*/
-
-        // 콤보박스에 Action 리스너 등록. 선택된 아이템의 이미지 출력
 
         setTitle("database assignment1");
         pack();
@@ -499,6 +379,16 @@ public class MyGui extends JFrame{
         setSize(1000, 800);
         //창을 눈에 보이게 설정
         setVisible(true);
+    }
+
+    private void setCheckOptions() {
+        checkOptions.clear();
+        checkOptions.add("선택");
+        for(JCheckBox cb: checkBoxes) {
+            if (cb.isSelected()) {
+                checkOptions.add(cb.getText());
+            }
+        }
     }
 
     private JTable makeTable(Object[][] data, String[] header) {
@@ -526,7 +416,7 @@ public class MyGui extends JFrame{
     }
 
     //테이블에 기록 추가
-    public void addRecord(JTable table ,Object[] record) {
+    private void addRecord(JTable table ,Object[] record) {
         DefaultTableModel model = (DefaultTableModel)table.getModel();
 
         for (Object o: record) {
@@ -537,7 +427,7 @@ public class MyGui extends JFrame{
     }
 
     //테이블에서 선택된 기록 삭제
-    public void removeSelectedRecords(JTable table) {
+    private void removeSelectedRecords(JTable table) {
         DefaultTableModel model = (DefaultTableModel)table.getModel();
         ArrayList<String> targetSsn = new ArrayList<>();
         for (int i = model.getRowCount() - 1; i >= 0; i--) {
@@ -554,7 +444,7 @@ public class MyGui extends JFrame{
     }
 
     //테이블에서 모든 기록 삭제
-    public void removeALlRecords(JTable table) {
+    private void removeALlRecords(JTable table) {
         DefaultTableModel model = (DefaultTableModel)table.getModel();
         for (int i = model.getRowCount() - 1; i >= 0; i--) {
             model.removeRow(i);
