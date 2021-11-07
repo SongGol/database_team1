@@ -22,6 +22,7 @@ public class Sellect_filter{
                 String row_one = row.get("Name")+"&"+row.get("Ssn")+"&"+row.get("Bdate")+"&"+row.get("Address")+"&"
                         +row.get("Sex")+"&"+row.get("Supervisor")+"&"+row.get("Salary")+"&"+row.get("Dname");
                 result.add(row_one);
+                System.out.println("부서: "+row_one);
             }
         }else if(filter.equals("성별")){
             Se_Select test_se_select = new Se_Select(Condition);
@@ -44,8 +45,8 @@ public class Sellect_filter{
             for (HashMap<String, Object> row : tmp){
                 String row_one = row.get("Name")+"&"+row.get("Ssn")+"&"+row.get("Bdate")+"&"+row.get("Address")+"&"
                         +row.get("Sex")+"&"+row.get("Supervisor")+"&"+row.get("Salary")+"&"+row.get("Dname");
-                System.out.println(row_one);
-//                result.add(row_one);
+                System.out.println("연봉:" + row_one);
+                result.add(row_one);
             }
         }else if (filter.equals("생일")){
             B_Select b_select = new B_Select(Condition);

@@ -250,29 +250,28 @@ public class MyGui extends JFrame{
                         searchWithSelector = new Sellect_filter("", "");
                         break;
                     case 1:
-                        searchWithSelector = new Sellect_filter("부서", "");
+                        //null pointer exception발생
+                        System.out.println("부서 index: " + searchDepCB.getSelectedIndex() + ", " + DEPARTMENT[searchDepCB.getSelectedIndex()]);
+                        searchWithSelector = new Sellect_filter("부서", DEPARTMENT[searchDepCB.getSelectedIndex()]);
                         break;
                     case 2:
                         //성별에 따라 출력
                         searchWithSelector = new Sellect_filter("성별", searchSCB.getSelectedIndex() == 0 ? "F" : "M");
                         break;
                     case 3:
-                        searchWithSelector = new Sellect_filter("연봉", "");
+                        //연봉에 따라 출력
+                        searchWithSelector = new Sellect_filter("연봉", searchText.getText().isEmpty() ? "0" : searchText.getText());
                         break;
                     case 4:
+
                         searchWithSelector = new Sellect_filter("생일", "");
                         break;
                     default:
                         searchWithSelector = new Sellect_filter("부하직원", "");
                 }
 
-                for(String s: searchWithSelector.result) {
-                    System.out.println("aa " + s);
-                    String[] ss = s.split("&");
-                    for(String sss: ss) {
-                        System.out.print(sss + " ");
-                    }
-                    System.out.println();
+                for(String r: searchWithSelector.result) {
+                    System.out.println("result " + r);
                 }
 
                 //테이블에 보여줄 원소 추가해주기
@@ -535,7 +534,7 @@ public class MyGui extends JFrame{
         DefaultTableModel model = (DefaultTableModel)table.getModel();
 
         for (Object o: record) {
-            System.out.println("addRecord" + o);
+            System.out.println("addRecord " + o);
         }
 
         model.addRow(record);
