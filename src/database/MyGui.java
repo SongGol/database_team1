@@ -277,30 +277,12 @@ public class MyGui extends JFrame{
                 Object[] mData = new Object[CHECK_OPTIONS.length];
                 for (int i = 1; i < searchWithSelector.result.size(); ++i) {
                     String[] subStr = searchWithSelector.result.get(i).split("&");
+                    mData[0]= false;
                     for (int k = 0; k < subStr.length; ++k) {
                         mData[k + 1] = subStr[k];
                     }
                     addRecord(resultTable, mData);
                 }
-
-
-                //resultTable = makeTable(mData, CHECK_OPTIONS);
-                //scrollpane.add(resultTable);
-
-                
-
-                //받은 데이터 테이블에 넣어주기
-
-                /*
-                try {
-                    insert = text.getText();
-                    Dbinsert dbi = new Dbinsert(insert, name, login);
-                    Db2 db = new Db2(name, login);
-                    dispose();
-                } catch (SQLException | IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }*/
             }
         });
 
@@ -352,32 +334,29 @@ public class MyGui extends JFrame{
                         insertionTexts[8].getText().isEmpty() ? "4" : insertionTexts[8].getText()
                 );
 
-                for (JTextField t: insertionTexts) {
-                    System.out.println("insert: " + t.getText());
-                }
-                System.out.println("insert: "+SEXS[sexComboBox.getSelectedIndex()]);
-
-                /*
-                try {
-                    insert = text.getText();
-                    Dbinsert dbi = new Dbinsert(insert, name, login);
-                    Db2 db = new Db2(name, login);
-                    dispose();
-                } catch (SQLException | IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }*/
+//                for (JTextField t: insertionTexts) {
+//                    System.out.println("insert: " + t.getText());
+//                }
+//                System.out.println("insert: "+SEXS[sexComboBox.getSelectedIndex()]);
             }
         });
 
         deleteBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println(resultTable.getRowCount());
-                System.out.println(resultTable.getColumn("선택"));
+                System.out.println("테이블 크기: "+resultTable.getRowCount());
                 //몇번 행이 선택되었는지 확인
-                for(int i = 0; i < resultTable.getRowCount(); ++i) {
-                    System.out.println(resultTable.getValueAt(i, 0));
-                }
+//                for(int i = 0; i < resultTable.getRowCount(); ++i) {
+//                    System.out.println(resultTable.getValueAt(i, 0));
+//
+//                    if (resultTable.getValueAt(i, 0).toString().equals("true")) {
+//                        System.out.println(111111111);
+//                    }
+//                }
+
+                //checkBox가 선택된 요소만 제거
+                removeSelectedRecords(resultTable);
+
+
 
                 /*
                 try {
@@ -557,15 +536,21 @@ public class MyGui extends JFrame{
         model.addRow(record);
     }
 
-    //테이블에서 기록 삭제
-    public void removeRecord(JTable table, int index) {
+    //테이블에서 선택된 기록 삭제
+    public void removeSelectedRecords(JTable table) {
         DefaultTableModel model = (DefaultTableModel)table.getModel();
-        if (index < 0) {
-            if(table.getRowCount() == 0)//비어있는 테이블이면
-                return;
-            index = 0;
+        ArrayList<String> targetSsn = new ArrayList<>();
+        for (int i = model.getRowCount() - 1; i >= 0; i--) {
+            if (model.getValueAt(i, 0).equals(true)){
+                // arrayList에 저장
+                targetSsn.add(model.getValueAt(i, 2).toString());
+                //테이블에서만 삭제
+                model.removeRow(i);
+                System.out.println("selected row: "+i+", ssn: "+model.getValueAt(i, 2).toString());
+            }
         }
-        model.removeRow(index);
+        //삭제
+        E_Delete delete = new E_Delete(targetSsn);
     }
 
     //테이블에서 모든 기록 삭제
